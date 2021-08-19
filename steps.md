@@ -6,9 +6,9 @@
 [X] Create initialization files
 [X] - index - create and start (Express) application
 [X] - config files - db connect (Mongoose), Express middlewares (body-parser, static), external middlewares (cookie parser, bcrypt, jwt)
-[ ] Create generic User model
-[ ] Create user service and auth middleware
-[ ] Create mock routes for register, login and logout
+[X] Create generic User model
+[X] Create user service and auth middleware
+[X] Create mock routes for register, login and logout
 [ ] Create route guards
 [ ] Create generic storage middleware
 
