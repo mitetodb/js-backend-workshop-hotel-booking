@@ -5,23 +5,24 @@ const { TOKEN_SECRET, COOKIE_NAME } = require('../config');
 const userService = require('../services/user');
 
 module.exports = () => (req, res, next) => {
-    // TODO parse jwt
-    // attach functions to context
-    req.auth = {
-        async register(username, password) {
-            const token = await register(username, password);
-            res.cookie(COOKIE_NAME, token);
-        },
-        async login(username, password) {
-            const token = await login(username, password);
-            res.cookie(COOKIE_NAME, token);
-        },
-        logout() {
-            res.clearCookie(COOKIE_NAME);
-        }
-    };
+    if (parseToken(req, res)) {
 
-    next();
+        req.auth = {
+            async register(username, password) {
+                const token = await register(username, password);
+                res.cookie(COOKIE_NAME, token);
+            },
+            async login(username, password) {
+                const token = await login(username, password);
+                res.cookie(COOKIE_NAME, token);
+            },
+            logout() {
+                res.clearCookie(COOKIE_NAME);
+            }
+        };
+        
+        next();
+    }
 };
 
 async function register(username, password) {
@@ -60,4 +61,21 @@ function generateToken(userData) {
         _id: userData._id,
         username: userData.username
     }, TOKEN_SECRET);
+}
+
+function parseToken(req, res) {
+    const token = req.cookies[COOKIE_NAME];
+    if (token) {
+        try {
+            const userData = jwt.verify(token, TOKEN_SECRET);
+            req.user = userData;
+        
+        } catch (err) {
+            res.clearCookie(COOKIE_NAME);
+            res.redirect('/auth/login');
+            return false;
+        }
+    }
+    return true;
+    
 }
