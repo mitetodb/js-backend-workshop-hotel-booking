@@ -3,9 +3,9 @@
 [X] Initialize NPM Project
 [X] Create folder structure
 [X] Install libraries
-[ ] Create initialization files
-[ ] - index - create and start (Express) application
-[ ] - config files - db connect (Mongoose), Express middlewares (body-parser, static), external middlewares (cookie parser, bcrypt, jwt)
+[X] Create initialization files
+[X] - index - create and start (Express) application
+[X] - config files - db connect (Mongoose), Express middlewares (body-parser, static), external middlewares (cookie parser, bcrypt, jwt)
 [ ] Create generic User model
 [ ] Create user service and auth middleware
 [ ] Create mock routes for register, login and logout
@@ -16,6 +16,7 @@
 
 [X] Include resources (HTML & CSS, etc.)
 [ ] Arrange templates (without editing)
+[ ] Update config to match project requirements (db name)
 [ ] Adapt User model and user service, auth middleware to project requirements
 [ ] Implements register, login pages, register, login, logout actions.
 [ ] Create models for project specific data
