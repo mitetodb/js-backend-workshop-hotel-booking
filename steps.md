@@ -10,7 +10,7 @@
 [X] Create user service and auth middleware
 [X] Create mock routes for register, login and logout
 [X] Create route guards
-[ ] Create generic storage middleware
+[X] Create generic storage middleware
 
 # Application Requirements (Hotel-Booking)
 
