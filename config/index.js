@@ -4,5 +4,7 @@ module.exports = {
     DB_OPTIONS: {
         useNewUrlParser: true,
         useUnifiedTopology: true
-    }
+    },
+    TOKEN_SECRET: 'my-very-secure-secret',
+    COOKIE_NAME: 'SESSION_TOKEN'
 };
