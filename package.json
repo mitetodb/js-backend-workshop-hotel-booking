@@ -1,0 +1,36 @@
+{
+  "name": "hotel-booking",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mitetodb/js-backend-workshop-hotel-booking.git"
+  },
+  "keywords": [
+    "js",
+    "backend",
+    "workshop",
+    "hotel",
+    "booking",
+    "javascript"
+  ],
+  "author": "Dimi Tsvetkov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mitetodb/js-backend-workshop-hotel-booking/issues"
+  },
+  "homepage": "https://github.com/mitetodb/js-backend-workshop-hotel-booking#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "cookie-parser": "^1.4.5",
+    "express": "^4.17.1",
+    "express-handlebars": "^5.3.3",
+    "express-validator": "^6.12.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.13.7"
+  }
+}
