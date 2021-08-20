@@ -1,6 +1,14 @@
-<form action="/auth/register" method="POST">
-    <input type="text" name="username">
-    <input type="password" name="password">
-    <input type="password" name="repass">
-    <input type="submit" value="Register">
-</form>
+<section id="viewRegister">
+    <h2>Create your account:</h2>
+    <form action="/auth/register" method="POST" id="formRegister">
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" placeholder="Email">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" placeholder="Enter your Username">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" placeholder="Password">
+        <label for="rePassword">Repeat Password:</label>
+        <input type="password" id="rePassword" name="repass" placeholder="Repeat Password">
+        <input type="submit" class="register" value="Register">
+    </form>
+</section>
