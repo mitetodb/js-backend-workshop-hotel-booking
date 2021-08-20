@@ -18,7 +18,7 @@
 [X] Arrange templates (without editing)
 [X] Update config to match project requirements (db name)
 [X] Implements register, login pages, register, login, logout actions.
-[ ] Adapt User model and user service, auth middleware to project requirements
+[X] Adapt User model and user service, auth middleware to project requirements
 [ ] Create models for project specific data
 [ ] Create data services and middlewares for project specific data
 [ ] Implements page actions for project specific functionality (validations and error handlings, redirects)

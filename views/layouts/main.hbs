@@ -19,7 +19,9 @@
                 <span>Info</span>
             </div>
             <div class="notification errorBox">
-                <span>Error</span>
+                {{#each errors}}
+                <span>{{this}}</span>
+                {{/each}}
             </div>
         </div>
     {{/if}}
