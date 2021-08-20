@@ -10,7 +10,8 @@ router.post(
     '/register', 
     isGuest(), 
     body('email', 'Invalid email').isEmail(),
-    body('username').isLength({ min: 3 }).withMessage('Username must be at least 3 characters long'), // TODO change according to requirements
+    body('password').isLength({ min: 5 }).withMessage('Password must be at least 5 characters long').bail()
+                    .matches('/[a-zA-Z0-9]/').withMessage('Password may contain only english letters and numbers'),
     body('repass').custom((value, { req }) => {
         if (value != req.body.password) {
             throw new Error('Passwords don\'t match');
@@ -19,26 +20,40 @@ router.post(
     }),
     async (req, res) => {
         const { errors } = validationResult(req);
+        let errorMsg;
 
-        try {
-            if (errors.length > 0) {
-                const message = errors.map(e => e.mgs).join('\n')
-                throw new Error(message);
-            }
-
-            await req.auth.register(req.body.username, req.body.email, req.body.password);
-
-            res.redirect('/'); // TODO change redirect location
-        } catch (err) {
-            console.log(err.message);
+        if (errors.length > 0) {
+            const errorMsg = errors.map(e => e.msg);
             const ctx = {
-                errors: err.message.split('\n'),
+                errors: errorMsg,
                 userData: {
                     username: req.body.username,
                     email: req.body.email
                 }
             };
             res.render('register', ctx);
+            throw new Error(errorMsg);
+        }
+
+        try {
+            await req.auth.register(req.body.username, req.body.email, req.body.password);
+            res.redirect('/'); // TODO change redirect location
+        } catch (err) {
+            if (err.errors) {
+                errorMsg = Object.values(err.errors).map(e => e.msg);
+            } else {
+                errorMsg = err.message;
+            }
+        
+            const ctx = {
+                errors: errorMsg,
+                userData: {
+                    username: req.body.username,
+                    email: req.body.email
+                }
+            };
+            res.render('register', ctx);
+            throw new Error(errorMsg);
         }    
     }
 );
