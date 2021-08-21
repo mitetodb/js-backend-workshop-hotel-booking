@@ -20,40 +20,27 @@ router.post(
     }),
     async (req, res) => {
         const { errors } = validationResult(req);
-        let errorMsg;
-
-        if (errors.length > 0) {
-            const errorMsg = errors.map(e => e.msg);
-            const ctx = {
-                errors: errorMsg,
-                userData: {
-                    username: req.body.username,
-                    email: req.body.email
-                }
-            };
-            res.render('register', ctx);
-            throw new Error(errorMsg);
-        }
 
         try {
+            if (errors.length > 0) {
+                // TODO improve error messages
+                throw new Error(Object.values(errors).map(e => e.msg).join('\n'));
+            }
+
             await req.auth.register(req.body.username, req.body.email, req.body.password);
             res.redirect('/'); // TODO change redirect location
+
         } catch (err) {
-            if (err.errors) {
-                errorMsg = Object.values(err.errors).map(e => e.msg);
-            } else {
-                errorMsg = err.message;
-            }
-        
+            console.log(err.message);
             const ctx = {
-                errors: errorMsg,
+                errors: err.message.split('\n'),
                 userData: {
                     username: req.body.username,
                     email: req.body.email
                 }
             };
+        
             res.render('register', ctx);
-            throw new Error(errorMsg);
         }    
     }
 );
@@ -65,16 +52,22 @@ router.get('/login', isGuest(), (req, res) => {
 router.post('/login', isGuest(), async (req, res) => {
     try {
         await req.auth.login(req.body.username, req.body.password);
-        res.redirect('/'); // TODO change redirect location
+        res.redirect('/');
+
     } catch (err) {
         console.log(err.message);
-            const ctx = {
-                errors: [err.message],
-                userData: {
-                    username: req.body.username
-                }
-            };
-            res.render('login', ctx);
+        let errors = [err.message];
+        if (err.type == 'credential') {
+            errors = ['Incorrect username or password'];
+        }
+
+        const ctx = {
+            errors,
+            userData: {
+                username: req.body.username
+            }
+        };
+        res.render('login', ctx);
     }
 });
 
