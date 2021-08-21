@@ -50,7 +50,7 @@ router.get('/:id/details', isUser(), async (req, res) => {
         const hotel = await req.storage.getHotelById(req.params.id);
         hotel.hasUser = Boolean(req.user);
         hotel.isAuthor = req.user && req.user._id == hotel.owner;
-        hotel.isBooked = req.user && hotel.bookedBy.find(u => u._id == req.user._id);
+        hotel.isBooked = req.user && hotel.bookedBy.find(u => u == req.user._id);
         
         res.render('hotel/details', hotel);
 
@@ -117,6 +117,18 @@ router.get('/:id/delete', isUser(), async (req, res) => {
 
         await req.storage.deleteHotel(req.params.id);
         res.redirect('/');
+        
+    } catch (err) {
+        console.log(err.message);
+        res.redirect(`/hotels/${req.params.id}/details`);
+    }
+
+});
+
+router.get('/:id/book', isUser(), async (req, res) => {
+    try {
+        await req.storage.bookHotel(req.params.id, req.user._id);
+        res.redirect(`/hotels/${req.params.id}/details`);
         
     } catch (err) {
         console.log(err.message);
