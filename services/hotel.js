@@ -1,23 +1,5 @@
 const Hotel = require('../models/Hotel');
 
-async function createHotel(hotelData) {
-    const hotel = new Hotel(hotelData);
-    await hotel.save();
-
-    return hotel;
-}
-
-async function updateHotel(data, id) {
-    const hotel = await Hotel.findById(id);
-
-    if (!hotel) {
-        throw new Error('Hotel not found!');
-    }
-
-    Object.assign(hotel, data);
-    return hotel.save();
-}
-
 async function getAllHotels() {
     const hotels = await Hotel.find({}).lean();
 
@@ -30,9 +12,37 @@ async function getHotelById(id) {
     return hotel;
 }
 
+async function createHotel(hotelData) {
+    const hotel = new Hotel(hotelData);
+    await hotel.save();
+
+    return hotel;
+}
+
+async function updateHotel(id, hotelData) {
+    const hotel = await Hotel.findById(id);
+
+    if (!hotel) {
+        throw new Error('Hotel not found!');
+    }
+
+    hotel.name = hotelData.name;
+    hotel.city = hotelData.city;
+    hotel.rooms = Number(hotelData.rooms);
+    hotel.imageUrl = hotelData.imageUrl;
+
+    return hotel.save();
+}
+
+async function deleteHotel(id) {
+    return await Hotel.findByIdAndDelete(id);
+}
+
+
 module.exports = {
+    getAllHotels,
+    getHotelById,
     createHotel,
     updateHotel,
-    getAllHotels,
-    getHotelById
+    deleteHotel
 };

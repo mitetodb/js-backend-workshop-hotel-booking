@@ -46,29 +46,41 @@ router.post('/create', isUser(), async (req, res) => {
 });
 
 router.get('/:id/details', isUser(), async (req, res) => {
-    const hotel = await req.storage.getHotelById(req.params.id);
+    try {
+        const hotel = await req.storage.getHotelById(req.params.id);
+        hotel.hasUser = Boolean(req.user);
+        hotel.isAuthor = req.user && req.user._id == hotel.owner;
+        hotel.isBooked = req.user && hotel.bookedBy.find(u => u._id == req.user._id);
+        
+        res.render('hotel/details', hotel);
 
-    res.render('hotel/details', hotel);
+    } catch (err) {
+        console.log(err.message);
+        res.redirect('/404');
+    }
+
 });
 
 router.get('/:id/edit', isUser(), async (req, res) => {
-    const hotel = await req.storage.getHotelById(req.params.id);
+    try {
+        const hotel = await req.storage.getHotelById(req.params.id);
 
-    res.render('hotel/edit', hotel);
+        if (req.user._id != hotel.owner) {
+            throw new Error('Cannot edit hotel you haven\'t created!');
+        }
+
+        res.render('hotel/edit', hotel);
+        
+    } catch (err) {
+        console.log(err.message);
+        res.redirect(`/hotels/${req.params.id}/details`);
+    }
+
 });
 
 router.post('/:id/edit', isUser(), async (req, res) => {
-    const hotelData = {
-        name: req.body.name,
-        city: req.body.city,
-        imageUrl: req.body.imageUrl,
-        rooms: req.body.rooms,
-        bookedBy: [],
-        owner: req.user._id
-    };
-
     try {
-        await req.storage.updateHotel(hotelData, req.params.id);
+        await req.storage.updateHotel(req.params.id, req.body);
 
         res.redirect(`/hotels/${req.params.id}/details`);
     } catch (err) {
@@ -93,6 +105,24 @@ router.post('/:id/edit', isUser(), async (req, res) => {
 
         res.render('hotel/edit', ctx);
     }
+});
+
+router.get('/:id/delete', isUser(), async (req, res) => {
+    try {
+        const hotel = await req.storage.getHotelById(req.params.id);
+
+        if (req.user._id != hotel.owner) {
+            throw new Error('Cannot delete hotel you haven\'t created!');
+        }
+
+        await req.storage.deleteHotel(req.params.id);
+        res.redirect('/');
+        
+    } catch (err) {
+        console.log(err.message);
+        res.redirect(`/hotels/${req.params.id}/details`);
+    }
+
 });
 
 
